@@ -1,20 +1,33 @@
-from itertools import permutations
-def solve_cryptarithmetic():
-    letters = 'BASELGM'
-    values = range(10)
-    for perm in permutations(values, len(letters)):
-        letter_to_value = {letters[i]: perm[i] for i in range(len(letters))}
-        if 0 in [letter_to_value['S'], letter_to_value['M']]:
-            continue
-        send = letter_to_value['B'] * 1000 + letter_to_value['A'] * 100 + letter_to_value['S'] * 10 + letter_to_value['E']
-        more = letter_to_value['B'] * 1000 + letter_to_value['A'] * 100 + letter_to_value['L'] * 10 + letter_to_value['L']
-        money = letter_to_value['G'] * 10000 + letter_to_value['A'] * 1000 + letter_to_value['M'] * 100 + letter_to_value['E'] * 10 + letter_to_value['S']
-        if send + more == money:
-            return letter_to_value
+def is_valid(puzzle, solution):
+
+    a, b, c = puzzle
+    num_a = int(''.join(str(solution[c]) for c in a))
+    num_b = int(''.join(str(solution[c]) for c in b))
+    num_c = int(''.join(str(solution[c]) for c in c))
+    return num_a + num_b == num_c
+
+def solve_cryptarithmetic(puzzle):
+    
+    letters = set(''.join(puzzle))
+    
+
+    from itertools import permutations
+    for perm in permutations(range(10), len(letters)):
+        solution = dict(zip(letters, perm))
+        
+        if is_valid(puzzle, solution):
+            return solution
+    
     return None
-solution = solve_cryptarithmetic()
+
+
+puzzle = ['TWO', 'TWO', 'FOUR']
+solution = solve_cryptarithmetic(puzzle)
+
 if solution:
-    for letter, value in solution.items():
-        print(f'{letter}: {value}')
+    print("Solution found:")
+    for word in puzzle:
+        num = ''.join(str(solution[c]) for c in word)
+        print(f"{word}: {num}")
 else:
-    print('No solution found.')
+    print("No solution found.")
