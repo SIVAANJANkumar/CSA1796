@@ -1,0 +1,89 @@
+from collections import Counter
+def calculate_gini(data):
+    total_samples = len(data)
+    if total_samples == 0:
+        return 0
+    class_counts = Counter(data)
+    gini = 1
+    for label in class_counts:
+        probability = class_counts[label] / total_samples
+        gini -= probability ** 2
+        return gini
+def split_dataset(X, y, feature_index, threshold):
+    left_X, left_y, right_X, right_y = [], [], [], []
+    for i in range(len(y)):
+        if X[i][feature_index] <= threshold:
+            left_X.append(X[i])
+            left_y.append(y[i])
+        else:
+            right_X.append(X[i])
+            right_y.append(y[i])
+   return left_X, left_y, right_X, right_y
+class TreeNode:
+    def _init_(self, gini, num_samples, num_samples_per_class, predicted_class):
+        self.gini = gini
+        self.num_samples = num_samples
+        self.num_samples_per_class = num_samples_per_class
+        self.predicted_class = predicted_class
+        self.feature_index = 0
+        self.threshold = 0
+        self.left = None
+        self.right = None
+def find_best_split(X, y):
+    if len(y) <= 1:
+        return None, None
+    num_parent = [len(y[y == c]) for c in range(max(y) + 1)]
+    best_gini = 1.0 - sum((n / len(y))**2 for n in num_parent)
+    best_idx, best_thr = None, None
+    for feature_index in range(X.shape[1]):
+        thresholds, classes = zip(*sorted(zip(X[:, feature_index], y)))
+        num_left = [0] * (max(y) + 1)
+        num_right = num_parent.copy()
+        for i in range(1, len(y)):
+            c = classes[i - 1]
+            num_left[c] += 1
+            num_right[c] -= 1
+            gini_left = 1.0 - sum((num_left[x] / i)**2 for x in range(max(y) + 1))
+            gini_right = 1.0 - sum((num_right[x] / (len(y) - i))**2 for x in range(max(y) + 1))
+            gini = (i * gini_left + (len(y) - i) * gini_right) / len(y)
+            if thresholds[i] == thresholds[i - 1]:
+                continue
+            if gini < best_gini:
+                best_gini = gini
+                best_idx = feature_index
+                best_thr = (thresholds[i] + thresholds[i - 1]) / 2
+    return best_idx, best_thr
+def build_tree(X, y, depth=0, max_depth=None):
+    num_samples_per_class = [len(y[y == i]) for i in range(max(y) + 1)]
+    predicted_class = np.argmax(num_samples_per_class)
+    node = TreeNode(
+        gini=calculate_gini(y),
+        num_samples=len(y),
+        num_samples_per_class=num_samples_per_class,
+        predicted_class=predicted_class, )
+    if depth < max_depth:
+        idx, thr = find_best_split(X, y)
+        if idx is not None:
+            indices_left = X[:, idx] <= thr
+            X_left, y_left = X[indices_left], y[indices_left]
+            X_right, y_right = X[~indices_left], y[~indices_left]
+            node.feature_index = idx
+            node.threshold = thr
+            node.left = build_tree(X_left, y_left, depth + 1, max_depth)
+            node.right = build_tree(X_right, y_right, depth + 1, max_depth)
+    return node
+def predict_tree(node, X):
+    if node.left is None and node.right is None:
+        return node.predicted_class
+    if X[node.feature_index] <= node.threshold:
+        return predict_tree(node.left, X)
+    else:
+        return predict_tree(node.right, X)
+if _name_ == "_main_":
+    import numpy as np
+    X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+    y = np.array([0, 1, 1, 0])
+    tree = build_tree(X, y, max_depth=2)
+    new_data = np.array([1, 1])
+    predicted_class = predict_tree(tree, new_data)
+    print("Predicted class:", predicted_class)
