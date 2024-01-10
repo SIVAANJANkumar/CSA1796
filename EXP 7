@@ -1,31 +1,31 @@
-from collections import defaultdict, deque
+from collections import deque
 
-class Graph:
-    def __init__(self):
-        self.graph = defaultdict(list)
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
 
-    def add_edge(self, u, v):
-        self.graph[u].append(v)
+    while queue:
+        vertex = queue.popleft()
 
-    def bfs(self, start_node):
-        visited = set()
-        queue = deque([start_node])
+        if vertex not in visited:
+            print(vertex, end=' ')
+            visited.add(vertex)
+            queue.extend(graph[vertex] - visited)
 
-        while queue:
-            current_node = queue.popleft()
-            if current_node not in visited:
-                print(current_node, end=" ")
-                visited.add(current_node)
-                queue.extend(node for node in self.graph[current_node] if node not in visited)
+# Example graph represented as an adjacency list
+graph = {
+    'A': {'B', 'C'},
+    'B': {'A', 'D', 'E'},
+    'C': {'A', 'F', 'G'},
+    'D': {'B'},
+    'E': {'B', 'H'},
+    'F': {'C'},
+    'G': {'C'},
+    'H': {'E'}
+}
 
-# Create a graph
-g = Graph()
-g.add_edge(0, 1)
-g.add_edge(0, 2)
-g.add_edge(1, 2)
-g.add_edge(2, 0)
-g.add_edge(2, 3)
-g.add_edge(3, 3)
+# Starting node for BFS
+start_node = 'A'
 
-print("Breadth-First Traversal (starting from node 2):")
-g.bfs(2)
+print("BFS starting from node", start_node)
+bfs(graph, start_node)
