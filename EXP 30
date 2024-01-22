@@ -14,4 +14,4 @@ diagnose(Condition) :-
     writeln('Patient may have: '),
     writeln(Condition),
     !.
-diagnose(_).
+diagnose(_)
