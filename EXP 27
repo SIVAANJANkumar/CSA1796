@@ -4,7 +4,7 @@ edge(a, c, 3).
 edge(b, d, 5).
 edge(b, e, 2).
 edge(c, f, 6).
-edge(c, g, 7).
+edge(c, g, 7)
 
 % Best First Search algorithm
 best_first_search(Start, Goal, Path) :-
