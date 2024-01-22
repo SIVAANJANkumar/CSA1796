@@ -7,4 +7,4 @@ name(lisa, date(1982, 7, 3)).
 % Queries
 % Find the DOB of a person
 dob_of_person(Name, DOB) :-
-    name(Name, DOB).
+    name(Name, DOB)
