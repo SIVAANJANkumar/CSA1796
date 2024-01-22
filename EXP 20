@@ -22,4 +22,4 @@ is_gas_giant(Name) :-
     planet(Name, gas_giant, _, _).
 
 is_ice_giant(Name) :-
-    planet(Name, ice_giant, _, _).
+    planet(Name, ice_giant, _, _)
