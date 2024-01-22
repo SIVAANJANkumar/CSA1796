@@ -1,4 +1,4 @@
-on(floor,monkey).
+on(floor,monkey)
 on(floor,chair).
 in(room,monkey).
 in(room,chair).
