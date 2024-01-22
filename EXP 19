@@ -1,6 +1,6 @@
 student(john).
 student(lisa).
-student(alex).
+student(alex)
 
 teacher(prof_smith).
 teacher(prof_jones).
