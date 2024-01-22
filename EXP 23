@@ -1,7 +1,7 @@
 female(pam). %clauses
 female(liz).
 female(pat).
-female(ann).
+female(ann)
 
 male(jim).
 male(bob).
