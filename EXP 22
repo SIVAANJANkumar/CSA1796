@@ -11,4 +11,4 @@ cannot_fly(penguin).
 can_fly_or_not(Bird, 'can fly') :-
     can_fly(Bird).
 can_fly_or_not(Bird, 'cannot fly') :-
-    cannot_fly(Bird).
+    cannot_fly(Bird)
