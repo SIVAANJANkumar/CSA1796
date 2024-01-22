@@ -2,7 +2,7 @@
 symptom(fever).
 symptom(cough).
 symptom(headache).
-symptom(rash).
+symptom(rash)
 
 condition(cold, [fever, cough]).
 condition(flu, [fever, cough, headache]).
